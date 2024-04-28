@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" >
+    <meta name="renderer" content="webkit">
+    <title>HLS播放协议</title>
+    <style>
+        body{margin:0; background-color:rad}}
+    </style>
+</head>
+
+<body>
+<script src="https://open.ys7.com/assets/ezuikit_v3.4/ezuikit.js"></script>
+<script src="https://open.ys7.com/assets/ezuikit_v2.6.4/js/jquery.min.js"></script>
+<video
+  id="myPlayer"
+  poster=""
+  controls
+  playsInline
+  webkit-playsinline
+  width=1440 height=820 style="object-fit: fill"
+>				
+    <source src="http://117.163.32.50:83/openUrl/qkM6wtG/live.m3u8" type="application/x-mpegURL" />
+</video>
+
+<script>
+    var player = new EZUIKit.EZUIPlayer('myPlayer');
+</script>
+</body>
+</html>
