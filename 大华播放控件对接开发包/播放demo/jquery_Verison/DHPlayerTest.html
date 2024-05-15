@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<!-- DHPlayerTest -->
+<html>
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=EmulateIE8" />
+  <title>Test page for DHPlayer</title>
+  <style type="text/css">
+    * {
+      margin: 0px;
+      padding: 0px;
+      font-size: 12px
+    }
+
+    #nav {
+      background-color: #C7EDCC;
+      height: 40px;
+      width: 600px;
+    }
+
+    table {
+      width: 700px
+    }
+
+    table tr {
+      height: 30px
+    }
+
+    /*基本样式*/
+    ul {
+      list-style: none;
+    }
+
+    /*ul前面的·消失*/
+    ul li {
+      float: left;
+      line-height: 40px;
+      text-align: center;
+      position: relative;
+    }
+
+    /*水平居中*/
+    a {
+      text-decoration: none;
+      color: #000;
+      padding: 0 10px;
+    }
+
+    a:hover {
+      color: #eee;
+      background-color: #aaa
+    }
+
+    ul li ul li {
+      float: none;
+      background-color: #eee;
+      margin-top: 2px;
+    }
+
+    ul li ul {
+      position: absolute;
+      left: 0px;
+      top: 40px;
+      display: none
+    }
+
+    ul li ul li a:hover {
+      background-color: blue;
+    }
+
+    ul li:hover ul {
+      display: block;
+    }
+
+    input[type='number'],
+    input[type='text'] {
+      height: 24px;
+    }
+
+    tr {
+      line-height: 40px;
+    }
+
+    td label {
+      vertical-align: 2px;
+      margin-left: 5px;
+    }
+
+    .playWnd {
+      border: 1px solid red;
+    }
+
+    #video_box {
+      height: calc(100vh - 50px);
+      overflow: auto;
+    }
+
+    #DHVideoPlayer {
+      width: 600px;
+      height: 600px;
+      border: 1px solid #000;
+    }
+
+    .record {
+      display: none;
+    }
+
+  </style>
+  <script src="jquery.min.js"></script>
+  <!--[if IE 8]>
+	<script type="text/javascript" src="jquery-1.9.1.min.js"></script>
+	<![endif]-->
+  <script src="videoPlayer.js"></script>
+  <script src="demo.js"></script>
+</head>
+
+<body style="background-color:white;margin-left:10px">
+  <h2 style="text-align:center">Test DHPlayer</h2>
+  <div id="video_box">
+    <table border="0">
+      <tr>
+        <td class="video-type">
+          <form>
+          <label>请选择视频类型：</label>
+          <input type="radio" value='0' name="radioCreate" checked><label for="0">实时</label>
+          <input type="radio" value='1' name="radioCreate"><label for="1">录像</label>
+          </form>
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <input type="button" onclick="destroy()" value="销毁窗口" />
+        </td>
+        <td>
+          <input type="button" onclick="initVideo()" value="创建窗口" />
+        </td>
+        <td>
+          <input type="button" onclick="closeVideo()" value="关闭选中视频窗口" />
+        </td>
+        <td>
+          <input type="button" onclick="snapshot()" value="抓图" />
+        </td>
+        <td>
+          <input type="button" onclick="setFullScreen()" value="全屏" />
+        </td>
+		<td>
+		  <input type="button" onclick="openAudio()" value="开启声音" />
+		</td>
+		<td>
+		  <input type="button" onclick="closeAudio()" value="关闭声音" />
+		</td>
+      </tr>
+      <tr>
+        <td>
+          <input type="checkbox" class="hideBar" onclick="setShowBar()" /> <label for="0">隐藏工具栏</label>
+        </td>
+        <td>
+          <input type="button" id="downloadRecord" onclick="download()" value="开始本地录像下载" />
+        </td>
+		<td>
+          <input type="button" onclick="closeTalk()" value="关闭选中窗口对讲" />
+        </td>
+        <td class="record">
+          <input type="button" onclick="pauseVideo()" value="录像暂停" />
+        </td>
+        <td class="record">
+          <input type="button" onclick="continueVideo()" value="录像继续" />
+        </td>
+      </tr>
+      <tr>
+        <td>
+          <label>选择窗口：</label>
+          <input style="width: 100px" type="number" name="Index" id='windowIndex'>
+          <input type="button" onclick="chooseWindow()" value="确定" />
+        </td>
+        <td>
+          <label>当前控件窗口数：</label>
+          <input style="width: 100px" type="number" id='divisionNum'>
+          <input type="button" onclick="changeDivision()" value="确定" />
+        </td>
+      </tr>
+      <tr>
+        <td class="drag">
+          <form>
+          <label>是否开启拖拽功能：</label>
+          <input type="radio" value='1' name="radioCreate"><label for="1">开启</label>
+          <input type="radio" value='0' name="radioCreate" checked><label for="0">关闭</label>
+          </form>
+        </td>
+      </tr>
+      <!--<tr class="real">-->
+      <!--  <td colspan='9'>-->
+      <!--    <label>悬浮文字：</label>-->
+      <!--    <input style="width: 100px" type="text" name="osdInfo" id='osdInfo'>-->
+      <!--    <label>字体：</label>-->
+      <!--    <input style="width: 100px" value="15" type="text" name="osdInfo_fontSize" id='osdInfo_fontSize'>-->
+      <!--    <label>R：</label>-->
+      <!--    <input style="width: 100px" value="255" type="text" name="osdInfo_R" id='osdInfo_R'>-->
+      <!--    <label>G：</label>-->
+      <!--    <input style="width: 100px" value="255" type="text" name="osdInfo_G" id='osdInfo_G'>-->
+      <!--    <label>B：</label>-->
+      <!--    <input style="width: 100px" value="255" type="text" name="osdInfo_B" id='osdInfo_B'>-->
+      <!--    <label>X位置：</label>-->
+      <!--    <input style="width: 100px" value="1" type="text" name="osdInfo_positionX" id='osdInfo_positionX'>-->
+      <!--    <label>Y位置：</label>-->
+      <!--    <input style="width: 100px" value="1" type="text" name="osdInfo_positionY" id='osdInfo_positionY'>-->
+      <!--    <label>字体大小：</label>-->
+      <!--    <input style="width: 100px" value="0" max="1000" min="0" type="text" name="osdInfo_positionY" id='osdInfo_fontWeight'>-->
+      <!--    <input type="button" onclick="setOSDInfo()" value="确定" />-->
+      <!--  </td>-->
+      <!--</tr>-->
+      解决jquery版本select无法使用问题：
+      <select onmouseenter="onSelectFocus()" onmouseleave='onSelectBlur()'>
+        <option>1</option>
+        <option>1</option>
+        <option>1</option>
+        <option>1</option>
+        <option>1</option>
+        <option>1</option>
+      </select>
+      <tr class="real">
+        <td colspan='5'>
+          <label>实时rtsp1: </label><input style="width: 500px" type="text" name="RTSP" id='realInput1'>
+          <input type="button" onclick="setRealTime(1)" value="确定" />
+        </td>
+      </tr>
+      <tr class="real">
+        <td colspan='5'>
+          <label>实时rtsp2: </label><input style="width: 500px" type="text" name="RTSP" id='realInput2'>
+          <input type="button" onclick="setRealTime(2)" value="确定" />
+        </td>
+      </tr>
+	  <tr class="talk">
+        <td colspan='5'>
+          <label>对讲rtsp1: </label><input style="width: 500px" type="text" name="RTSP" id='talkInput1'>
+          <input type="button" onclick="talk(1)" value="确定" />
+        </td>
+      </tr>
+      <tr class="record">
+        <td colspan='5'>
+          <label>录像rtsp1: </label><input style="width: 500px" type="text" name="RTSP" id='recordInput1'>
+          <input type="button" onclick="setPlayback(1)" value="确定" />
+        </td>
+      </tr>
+      <tr class="record">
+        <td colspan='5'>
+          <label>录像rtsp2: </label><input style="width: 500px" type="text" name="RTSP" id='recordInput2'>
+          <input type="button" onclick="setPlayback(2)" value="确定" />
+        </td>
+      </tr>
+	  <tr class="download">
+        <td colspan='5'>
+          <label>下载rtsp1: </label><input style="width: 500px" type="text" name="RTSP" id='downloadInput1'>
+          <input type="button" onclick="setDownloadRecord(1)" value="确定" />
+        </td>
+      </tr>
+    </table>
+    <div id="nav">
+      <ul>
+        <li><a href="#">head</a></li>
+        <li><a href="#">saloon</a>
+          <ul class="saloon">
+            <li><a href="#">JavaScript</a></li>
+            <li><a href="#">JQuery</a></li>
+          </ul>
+        </li>
+        <li><a href="#">learn</a>
+          <ul class="learn">
+            <li><a href="#">video</a></li>
+            <li><a href="#">case</a></li>
+            <li><a href="#">ask</a></li>
+          </ul>
+        </li>
+        <li><a href="#">case</a></li>
+        <li><a href="#">about</a>
+          <ul class="about">
+            <li><a href="#">about_1</a></li>
+            <li><a href="#">about_2</a></li>
+            <li><a href="#">about_3</a></li>
+            <li><a href="#">about_4</a></li>
+            <li><a href="#">about_5</a></li>
+            <li><a href="#">about_6</a></li>
+          </ul>
+        </li>
+      </ul>
+    </div>
+    <div id="DHVideoPlayer"></div>
+  </div>
+  <!-- <object width="800" height="560" id="DHVideoPlayer" style="border: 1px solid #333"
+    classid="clsid:1e68fa30-f1b5-4bbe-b483-8caaa2a3995a"> </object> -->
+  <!-- <div id="DHVideoPlayer" style="width:800px;height:560px;border: 1px solid #333">
+    </div> -->
+</body>
+
+</html>

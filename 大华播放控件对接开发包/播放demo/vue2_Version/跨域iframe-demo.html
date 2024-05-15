@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+</head>
+<body>
+  <div id="test" style="position: fixed; top: 554px; left: 114px; width: 200px; height: 50px;">测试遮挡功能dom</div>
+  <!-- <iframe id="iframe1" src="./index.html" frameborder="0" style="width: 100vw; height: 100vh;"></iframe> -->
+  <iframe id="iframe1" src="http://127.0.0.1:5566" frameborder="0" style="width: 100vw; height: 100vh;"> </iframe>
+</body>
+<script>
+  var test = document.getElementById('test');
+  var pIframe = document.getElementById('iframe1');
+  var pIframeRect = null;
+  var parentIframeShieldRect = null
+  var data = {}
+
+  function setValueToIframe(data) {
+    document.getElementById('iframe1').contentWindow.postMessage(data, "*")
+  }
+  setTimeout(() => {
+    pIframeRect = pIframe.getBoundingClientRect();
+    data = {
+      isPIframe: true, // 当前是iframe模式,
+      topInnerWidth: window.top.innerWidth,
+      topInnerHeight: window.top.innerHeight,
+      parentIframeShieldRect: test.getBoundingClientRect(),
+      pIframeRect: pIframeRect
+    }
+    setValueToIframe(data)
+  }, 3000)
+
+  setInterval(() => {
+    parentIframeShieldRect = test.getBoundingClientRect();
+    setValueToIframe({methods: 'shieldRect', parentIframeShieldRect})
+  }, 300)
+</script>
+</html> 

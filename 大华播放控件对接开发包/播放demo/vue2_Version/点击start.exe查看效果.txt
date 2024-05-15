@@ -1,0 +1,4 @@
+index.html+static为编译产物
+1、点击AspNet.exe，可模拟服务器环境直接打开index.html，查看demo
+
+vueProject为核心代码。static/DHPlayer.js 可直接在代码中引入使用，具体使用方法参考 README.md

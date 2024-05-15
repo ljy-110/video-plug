@@ -1,0 +1,9 @@
+<?xml version="1.0" encoding="utf-8"?>
+<mudule>
+	<base>
+		<short-name>DHPlayer</short-name>
+		<service-version>1.0.0</service-version>
+		<svn-version>@0</svn-version>
+		<grouping type="3">DHPlayer</grouping>
+	</base>
+</mudule>
